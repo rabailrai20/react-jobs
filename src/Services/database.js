@@ -115,3 +115,72 @@ export function getJobById(id) {
     },
   };
 }
+
+export function addJob(job) {
+  db.run(
+    `
+    INSERT INTO jobs (
+      title,
+      type,
+      description,
+      location,
+      salary,
+      company,
+      companyDescription,
+      contactEmail,
+      contactPhone
+    )
+    VALUES (?,?,?,?,?,?,?,?,?)
+  `,
+    [
+      job.title,
+      job.type,
+      job.description,
+      job.location,
+      job.salary,
+      job.company.name,
+      job.company.description,
+      job.company.contactEmail,
+      job.company.contactPhone,
+    ]
+  );
+}
+
+
+export function deleteJob(id) {
+  db.run(
+    `DELETE FROM jobs WHERE id = ?`,
+    [Number(id)]
+  );
+}
+
+export function updateJob(job) {
+  db.run(
+    `
+    UPDATE jobs
+    SET
+      title=?,
+      type=?,
+      description=?,
+      location=?,
+      salary=?,
+      company=?,
+      companyDescription=?,
+      contactEmail=?,
+      contactPhone=?
+    WHERE id=?
+  `,
+    [
+      job.title,
+      job.type,
+      job.description,
+      job.location,
+      job.salary,
+      job.company.name,
+      job.company.description,
+      job.company.contactEmail,
+      job.company.contactPhone,
+      Number(job.id),
+    ]
+  );
+}
