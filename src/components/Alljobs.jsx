@@ -1,4 +1,4 @@
-import { getDatabase } from "../services/database";
+import { getDatabase } from "../Services/database";
 import {Link } from "react-router-dom"
 
 const Alljobs = () => {

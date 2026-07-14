@@ -1,4 +1,4 @@
-import { getDatabase } from "../services/database";
+import { getDatabase } from "../Services/database";
 import {useState} from "react"
 import {FaMapMarker } from 'react-icons/fa'
 import {Link } from "react-router-dom"

@@ -1,43 +1,57 @@
 import JobList from "./JobList";
 import { useState, useEffect } from "react";
 import Spinner from "./Spinner";
+import { getDatabase } from "../Services/database";
 
 const JobListing = ({ ShowPartTime }) => {
-  const [jobs, setjobs] = useState([]);
-  const [loading, setloading] = useState(true);
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchjobs = async () => {
+    const loadJobs = async () => {
       try {
-        const res = await fetch("/api/Jobs");
-        const data = await res.json();
+        const db = getDatabase();
 
-        console.log(data); // Debugging
+        if (!db) {
+          console.log("Database not initialized.");
+          return;
+        }
 
-        setjobs(data);
+        const result = db.exec("SELECT * FROM jobs");
+
+        if (result.length > 0) {
+          const rows = result[0].values;
+
+const jobData = rows.map((row) => ({
+  id: row[0],
+  title: row[1],
+  type: row[2],
+  description: row[3],
+  location: row[4],
+  salary: row[5],
+  company: {
+    name: row[6],
+    description: row[7],
+    contactEmail: row[8],
+    contactPhone: row[9],
+  },
+}));
+
+          setJobs(jobData);
+        }
       } catch (error) {
-        console.log("Error in fetching", error);
+        console.error("Error loading jobs:", error);
       } finally {
-        setloading(false);
+        setLoading(false);
       }
     };
 
-    fetchjobs();
+    loadJobs();
   }, []);
 
   const filteredJobs = jobs.filter(
     (job) => !ShowPartTime || job.type === "Part-Time"
-    
   );
-  const displayedJobs = ShowPartTime
-  ? filteredJobs
-  : filteredJobs.slice(0, 3);
-
-  console.log(filteredJobs); // Debugging
-
-  // if (loading) {
-  //   return <h2>Loading...</h2>;
-  // }
 
   return (
     <section className="bg-blue-50 px-4 py-10">
@@ -46,18 +60,15 @@ const JobListing = ({ ShowPartTime }) => {
           Browse Jobs
         </h2>
 
-        
-          {loading ? (
-          <Spinner loading = {loading}/> ):(
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {displayedJobs.map((job) => (
-            <JobList key={job.id} job={job} />
-          ))}
+        {loading ? (
+          <Spinner loading={loading} />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {filteredJobs.map((job) => (
+              <JobList key={job.id} job={job} />
+            ))}
           </div>
-          )}
-          {/* // {filteredJobs.map((job) => ( */}
-          {/* //   <JobList key={job.id} job={job} />
-          // ))} */}
+        )}
       </div>
     </section>
   );
