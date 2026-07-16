@@ -4,6 +4,8 @@ import HomePage from "./Pages/HomePage";
 import MainLayout from "./Layouts/MainLayout";
 import JobPage from "./Pages/JobPage";
 import NotFoundPage from "./Pages/NotFoundPage";
+import EmployerDashboard from "./Pages/EmployerDashboard";
+import EmployerLogin from "./Pages/EmployerPage";
 
 import { useState, useEffect } from "react";
 import { initializeDatabase } from "./Services/database";
@@ -56,6 +58,16 @@ const App = () => {
         <Route path="/jobs/:id" element={<JobPage />} />
 
         <Route path="*" element={<NotFoundPage />} />
+        <Route
+  path="/employer/login"
+  element={<EmployerLogin />}
+/>
+
+<Route
+  path="/employer/dashboard"
+  element={<EmployerDashboard />}
+/>
+
       </Route>
     )
   );

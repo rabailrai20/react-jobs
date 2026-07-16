@@ -27,7 +27,7 @@ A modern React-based job portal built as an internship project. The application 
 - Tailwind CSS
 - React Icons
 - SQL.js (SQLite compiled to WebAssembly)
-- JavaScript (ES6+)
+- JavaScript
 
 ---
 
